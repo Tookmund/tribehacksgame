@@ -6,7 +6,7 @@ from PyQt5.QtCore import Qt, QBasicTimer
 from PyQt5.QtGui import QPainter, QColor
 import sys, random
 
-from Shape import Rect
+from Shape import Rect, Circle
 from Player import Player
 from Text import Text
 
@@ -19,12 +19,15 @@ class Window(QMainWindow):
 		self.show()
 
 class Frame(QWidget):
+	def _randompoint(self):
+		return (random.randint(0,self.width()), random.randint(0,self.height()))
+
 	def __init__(self, parent, w, h):
 		super().__init__(parent)
-		self.player = Player(0,0)
-		self.objects = [self.player]
-		self.grabKeyboard()
 		self.setGeometry(0, 0, w, h)
+		self.player = Player(*self._randompoint())
+		self.objects = [Circle(*self._randompoint()), self.player]
+		self.grabKeyboard()
 		self.timer = QBasicTimer()
 		self.stuckTimer = QBasicTimer()
 		self.show()
@@ -35,25 +38,33 @@ class Frame(QWidget):
 		qp = QPainter(self)
 		for obj in self.objects:
 			obj.paint(qp)
+	def end(self, text):
+		self.objects.append(Text(self.width()/2,self.height()/2,text))
+		self.repaint()
+		self.timer.stop()
+		self.stuckTimer.stop()
+		self.releaseKeyboard()
 
 	def timerEvent(self, event):
 		self.objects.append(Rect(random.randint(0,649),random.randint(0,481)))
 		if event.timerId() == 2:
 			if not self.player.move(0,0,self.objects):
-				self.objects.append(Text(self.width()/2,self.height()/2,"You Deaded"))
+				self.end("You Deaded")
 		self.repaint()
 
 	def keyPressEvent(self, event):
 		d = 10
 		if event.key() == Qt.Key_W:
-			self.player.move(0,-d,self.objects)
+			r = self.player.move(0,-d,self.objects)
 		elif event.key() == Qt.Key_S:
-			self.player.move(0,d,self.objects)
+			r = self.player.move(0,d,self.objects)
 		elif event.key() == Qt.Key_A:
-			self.player.move(-d,0,self.objects)
+			r = self.player.move(-d,0,self.objects)
 		elif event.key() == Qt.Key_D:
-			self.player.move(d,0,self.objects)
+			r = self.player.move(d,0,self.objects)
 		self.repaint()
+		if r > 1:
+			self.end("You Win")
 
 
 if __name__ == "__main__":
