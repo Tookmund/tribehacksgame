@@ -25,7 +25,7 @@ class Frame(QWidget):
 	def __init__(self, parent, w, h):
 		super().__init__(parent)
 		self.setGeometry(0, 0, w, h)
-		self.player = Player(*self._randompoint())
+		self.player = Player(*self._randompoint(), self.width(), self.height())
 		self.objects = [Circle(*self._randompoint()), self.player]
 		self.grabKeyboard()
 		self.timer = QBasicTimer()

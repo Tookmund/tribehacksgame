@@ -4,8 +4,10 @@ from Object import Object
 
 class Player(Object):
 
-	def __init__(self, x, y):
+	def __init__(self, x, y, width, height):
 		super().__init__(x,y)
+		self.width = width
+		self.height = height
 		self.size = 10
 		self.outline = QPen(QtCore.Qt.black)
 		self.fill = QColor(QtCore.Qt.red)
@@ -18,6 +20,8 @@ class Player(Object):
 	def move(self,dx,dy,objs):
 		newx = self.x + dx
 		newy = self.y + dy
+		if newx < 0 or newy < 0 or newx > self.width or newy > self.height:
+			return False
 		if self._check(newx, newy, objs[0]):
 			return 10
 		for obj in objs[1:]:
