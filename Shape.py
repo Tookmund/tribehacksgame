@@ -1,13 +1,14 @@
-from PyQt5.QtGui import QPainter, QColor, QPen 
+from PyQt5.QtGui import QPainter, QColor, QPen
 import random
 
 # Shapes
 from Object import Object
 
-def randomcolor():
-	return QColor(random.randint(0,255),random.randint(0,255),random.randint(0,255))
 
-class Rect(Object):
+class Shape(Object):
+	def _randomcolor(self):
+		return QColor(random.randint(0,255),random.randint(0,255),random.randint(0,255))
+
 	def __init__(self, x, y, width=None, height=None, outline=None, fill=None):
 		super().__init__(x, y)
 		if width is None:
@@ -17,13 +18,25 @@ class Rect(Object):
 			height = random.randint(10,100)
 		self.height = height
 		if outline is None:
-			outline = randomcolor()
+			outline = self._randomcolor()
 		if fill is None:
-			fill = randomcolor()
+			fill = self._randomcolor()
 		self.outline = QPen(outline)
 		self.fill = QColor(fill)
 
 	def paint(self, qp):
 		qp.setPen(self.outline)
 		qp.setBrush(self.fill)
-		qp.drawRect(self.x, self.y, self.width, self.height)		
+
+class Rect(Shape):
+	def paint(self, qp):
+		super().paint(qp)
+		qp.drawRect(self.x, self.y, self.width, self.height)
+
+class Circle(Shape):
+	def __init__(self, x, y, size=None, outline=None, fill=None):
+		super().__init__(x, y, size, size, outline, fill)
+
+	def paint(self, qp):
+		super().paint(qp)
+		qp.drawEllipse(self.x, self.y, self.width, self.height)
