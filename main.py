@@ -4,7 +4,7 @@
 from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QApplication, QWidget
 from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal
 from PyQt5.QtGui import QPainter, QColor
-import sys, random
+import sys
 
 from Shape import Rect
 from Player import Player
@@ -27,11 +27,8 @@ class Frame(QWidget):
 
 	def paintEvent(self, event):
 		qp = QPainter(self)
-		#qp.begin(self)
 		for obj in self.objects:
 			obj.paint(qp)
-		#qp.end()
-		print(self.player.x, " ", self.player.y)
 
 	def keyPressEvent(self, event):
 		d = 10
