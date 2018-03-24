@@ -31,13 +31,14 @@ class Frame(QWidget):
 		self.timer = QBasicTimer()
 		self.stuckTimer = QBasicTimer()
 		self.show()
-		self.timer.start(500,self)
+		self.timer.start(200,self)
 		self.stuckTimer.start(2000,self)
 
 	def paintEvent(self, event):
 		qp = QPainter(self)
 		for obj in self.objects:
 			obj.paint(qp)
+
 	def end(self, text):
 		self.objects.append(Text(self.width()/2,self.height()/2,text))
 		self.repaint()
@@ -54,6 +55,7 @@ class Frame(QWidget):
 
 	def keyPressEvent(self, event):
 		d = 10
+		r = 0
 		if event.key() == Qt.Key_W:
 			r = self.player.move(0,-d,self.objects)
 		elif event.key() == Qt.Key_S:
