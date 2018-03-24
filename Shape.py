@@ -35,6 +35,8 @@ class Rect(Shape):
 
 class Circle(Shape):
 	def __init__(self, x, y, size=None, outline=None, fill=None):
+		if size is None:
+			size = random.randint(10,100)
 		super().__init__(x, y, size, size, outline, fill)
 
 	def paint(self, qp):
