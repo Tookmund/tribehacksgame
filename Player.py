@@ -18,12 +18,14 @@ class Player(Object):
 	def move(self,dx,dy,objs):
 		newx = self.x + dx
 		newy = self.y + dy
-		for obj in objs:
+		if self._check(newx, newy, objs[0]):
+			return 10
+		for obj in objs[1:]:
 			if self._check(newx, newy, obj):
 				return False
 		self.x += dx
 		self.y += dy
-		return True
+		return 1
 
 	def _check(self, newx, newy, obj):
 		if self == obj:
