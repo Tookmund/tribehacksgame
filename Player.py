@@ -6,15 +6,26 @@ class Player(Object):
 
 	def __init__(self, x, y):
 		super().__init__(x,y)
-		self.size = 100
+		self.size = 10
 		self.outline = QPen(QtCore.Qt.black)
 		self.fill = QColor(QtCore.Qt.red)
 
 	def paint(self, qp):
 		qp.setPen(self.outline)
 		qp.setBrush(self.fill)
-		qp.drawRect(self.x,self.y,self.size,self.size)
+		qp.drawEllipse(self.x,self.y,self.size,self.size)
 
-	def move(self,dx,dy):
+	def move(self,dx,dy,objs):
+		newx = self.x + dx
+		newy = self.y + dy
+		for obj in objs:
+			if self._check(newx, newy, obj):
+				return False
 		self.x += dx
 		self.y += dy
+		return True
+
+	def _check(self, newx, newy, obj):
+		if self == obj:
+			return
+		return (obj.x <= (newx+(self.size/2)) <= (obj.x+obj.width) and obj.y <= (newy+self.size/2) <= (obj.y+obj.height))
